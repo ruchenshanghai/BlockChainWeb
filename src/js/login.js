@@ -232,6 +232,7 @@ $(function () {
     }
   }
 
+  // bind click event
   nextButton.on('click', function (e) {
     validateTimer.val('test');
     console.log('location: ' + locationPicker.val());
@@ -244,11 +245,12 @@ $(function () {
         // illegal
         $.alert('请输入正确的手机号码', '错误!');
       } else {
+        // display validate li
         let timeCount = defaultTimer;
         validateLi.removeClass('hidden-li');
         nextButton.html('重新发送验证码');
         nextButton.addClass('disabled');
-        // bind event
+        // bind timer event
         let timerClock = setInterval(doTimerLoop, 1000); //一秒执行一次
         function doTimerLoop() {
           timeCount--;
@@ -259,14 +261,18 @@ $(function () {
             nextButton.removeClass('disabled');
           }
         }
+        // watch validate input
         validateCode.on('input propertychange', function () {
           // console.log('validate code: ' + validateCode.val());
           // check code
           if (validateCode.val() === targetCode) {
             $.alert('验证成功');
             console.log('validate code: ' + validateCode.val());
-            // link to identity collect page
-
+            // set cookie
+            $.fn.cookie('phoneNumber', phoneNumber.val());
+            $.fn.cookie('locationPicker', locationPicker.val());
+            // link to identity register page
+            location.href = './register.html';
           }
         });
         $.alert('已向' + phoneNumber.val() + '发送验证码，请注意查收', '成功!');
